@@ -17,8 +17,7 @@ type OrbitItemDirection = 'clockwise' | 'counter-clockwise';
 type OrbitItemProps = {
   radius?: number;
   config?: {
-    anglePerStep?: number;
-    timeBetweenSteps?: number;
+    speed?: number
     startAngle?: number;
     direction?: OrbitItemDirection;
     angle?: number;
@@ -51,7 +50,7 @@ export const OrbitItem = forwardRef<HTMLDivElement, OrbitItemProps & Props.HasCh
       className,
       children,
       radius = 0,
-      config: { anglePerStep = 0.1, timeBetweenSteps = 0.1, startAngle = 0, direction = 'clockwise', angle },
+      config: { speed = 0.01, startAngle = 0, direction = 'clockwise', angle },
       style,
       ...rest
     },
@@ -63,12 +62,26 @@ export const OrbitItem = forwardRef<HTMLDivElement, OrbitItemProps & Props.HasCh
     const actualRef = (ref ?? internalRef) as React.MutableRefObject<HTMLDivElement>;
 
     useEffect(() => {
-      const interval = setInterval(() => {
-        setAngle((prevAngle) => (direction === 'clockwise' ? prevAngle + (anglePerStep % 360) : prevAngle - (anglePerStep % 360)));
-      }, timeBetweenSteps);
-
-      return () => clearInterval(interval);
-    }, [anglePerStep, timeBetweenSteps]);
+      let animationFrameId: number
+      let lastTime = performance.now()
+  
+      const updateAngle = (time: number) => {
+          const deltaTime = time - lastTime
+  
+          setAngle((prevAngle) => 
+              direction === 'clockwise' 
+                  ? (prevAngle + speed*deltaTime) % 360 
+                  : (prevAngle - speed*deltaTime) % 360
+          )
+          lastTime = time
+  
+          animationFrameId = requestAnimationFrame(updateAngle)
+      }
+  
+      animationFrameId = requestAnimationFrame(updateAngle)
+  
+      return () => cancelAnimationFrame(animationFrameId)
+    }, [speed, direction])
 
     const { x, y } = calculateCoordinatesOnCircle(radius, effectiveAngle, actualRef.current?.getBoundingClientRect() ?? new DOMRect());
 

@@ -13,8 +13,7 @@ const OrbitItemFreezeOnMouseOver = ({ children, radius }: Props.ForceChildren & 
       config={{
         direction: 'clockwise',
         startAngle: 120,
-        anglePerStep: isFreeze ? 0 : 0.2,
-        timeBetweenSteps: 0.1,
+        speed: isFreeze ? 0 : 0.01
       }}
       style={{
         transition: 'transform 0.1s ease-in-out',
@@ -46,7 +45,7 @@ export default function Page(): JSX.Element {
             config={{
               direction: 'clockwise',
               startAngle: 120,
-              anglePerStep: 0.2,
+              speed: 0.01,
             }}
             className={SHARED_CLASSNAME}
           >
@@ -57,7 +56,7 @@ export default function Page(): JSX.Element {
             config={{
               direction: 'clockwise',
               startAngle: 240,
-              anglePerStep: 0.2,
+              speed: 0.01,
             }}
             className={SHARED_CLASSNAME}
           >
@@ -68,7 +67,7 @@ export default function Page(): JSX.Element {
             config={{
               direction: 'clockwise',
               startAngle: 0,
-              anglePerStep: 0.2,
+              speed: 0.01,
             }}
             className={SHARED_CLASSNAME}
           >
@@ -84,7 +83,7 @@ export default function Page(): JSX.Element {
             config={{
               direction: 'clockwise',
               startAngle: 240,
-              anglePerStep: 0.3,
+              speed: 0.02,
             }}
             className={SHARED_CLASSNAME}
           >
